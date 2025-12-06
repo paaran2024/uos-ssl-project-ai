@@ -1,0 +1,27 @@
+{
+  "project_name": "uos-ssl-project",
+  "project_root": ".",
+  "commands": {
+    "flutter_get": {
+      "command": "flutter pub get",
+      "description": "Run `flutter pub get` in the `app` directory.",
+      "dir": "app"
+    },
+    "flutter_run": {
+      "command": "flutter run",
+      "description": "Run the Flutter application.",
+      "dir": "app"
+    },
+    "python_venv": {
+      "command": "python -m venv venv",
+      "description": "Create a Python virtual environment in the `ai` directory.",
+      "dir": "ai"
+    },
+    "pip_install": {
+      "command": "venv\\Scripts\\pip install -r requirements.txt",
+      "description": "Install Python dependencies from `requirements.txt` into the virtual environment.",
+      "dir": "ai"
+    }
+  },
+  "dependencies": {}
+}
