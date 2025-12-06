@@ -1,0 +1,20 @@
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch
+torchvision
+torchaudio
+numpy
+scikit-learn
+tqdm
+matplotlib
+# Added from basicsr requirements
+addict
+future
+lmdb
+opencv-python
+Pillow
+pyyaml
+requests
+scikit-image
+scipy
+tb-nightly
+yapf

@@ -1,0 +1,41 @@
+# Base Level
+task_name: "vision"
+dataset: "ImageNet"
+batch_size: 32
+val_batch_size: 1024
+model_name: "deit-small-patch16-224"
+loss_type: "MMD+KL"
+
+# Specs
+lambda_contribution: 100
+mac_constraint: 0.684 #Main Table Tau 
+# mac_constraint: 0.89 #Main Table Beta 
+fine_tune: False
+seed: 57
+logging: False
+
+embedding_choice: 'layernorm_before'
+temp: 4
+aggregate: 'sum'
+
+beta_config_only: False
+
+head_include_fin_layer_mmd: True
+head_fin_decay_bool: False
+head_fin_decay_val: 1
+
+
+neuron_include_fin_layer_mmd: True
+neuron_fin_decay_bool: True
+neuron_fin_decay_val: 0.0001
+
+head_metric_decay: 1
+
+neuron_metric_decay: 1
+
+patch_metric_decay: 1
+
+
+distill_token: True
+
+max_patch_evnvelope: 100

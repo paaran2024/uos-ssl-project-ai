@@ -1,0 +1,66 @@
+# -----------------------------------------------------------------------------
+# CATANet-L 모델 프루닝을 위한 커스텀 설정 파일
+# -----------------------------------------------------------------------------
+
+# --- 모델 및 작업 설정 ---
+model_name: "CATANet-L"
+task_name: "vision"
+scale: 2 # MODIFIED for x2 pruning
+seq_len: 4096 # MODIFIED for x2 pruning (64x64 feature map size)
+
+# --- 가중치 파일 경로 ---
+# MODIFIED: Path updated for an x2 model. User must provide this file.
+weights_path: "weights/CATANet-L_x2.pth"
+
+# --- 프루닝 제약 조건 ---
+# 목표로 하는 연산량(MACs) 비율. 0.5는 원본 모델의 50% 연산량을 의미합니다.
+mac_constraint: 0.5
+# beta_config_only: true로 설정하면 패치 프루닝(토큰 감소) 없이 헤드/뉴런 프루닝만 수행합니다.
+beta_config_only: true
+
+# --- 데이터셋 설정 ---
+dataset: "DIV2K"
+datasets:
+  train:
+    name: DIV2K
+    type: PairedImageDataset
+    dataroot_gt: datasets/DIV2K/DIV2K_train_HR
+    dataroot_lq: datasets/DIV2K/DIV2K_train_LR_bicubic/X2 # MODIFIED for x2
+    filename_tmpl: "{}x2" # MODIFIED for x2
+    io_backend:
+      type: disk
+    gt_size: 128
+    use_hflip: true
+    use_rot: true
+    use_shuffle: true
+    num_worker_per_gpu: 8
+    batch_size_per_gpu: 16
+    dataset_enlarge_ratio: 100
+    prefetch_mode: "cuda"
+    pin_memory: true
+
+  val: # 평가 데이터셋 이름 (gen_dataset.py는 'val' 키를 찾습니다)
+    name: Set5
+    type: PairedImageDataset
+    dataroot_gt: datasets/Set5/HR
+    dataroot_lq: datasets/Set5/LR_bicubic/X2 # MODIFIED for x2
+    filename_tmpl: "{}x2" # MODIFIED for x2
+    io_backend:
+      type: disk
+
+# --- 기타 OPTIN 설정 ---
+loss_type: "MMD+KL"
+lambda_contribution: 1.0
+seed: 42
+logging: false
+search_method: "default"
+aggregate: "sum"
+train_dataset_limit: 5000
+val_dataset_limit: 50
+prune_dataset_limit: 1000
+num_prune_samples: 128
+n_iter: 5
+num_tokens: 16
+group_size: 256
+ema_decay: 0.999
+head_include_fin_layer_mmd: true
