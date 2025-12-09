@@ -14,7 +14,7 @@ weights_path: "weights/CATANet-L_x2.pth"
 
 # --- 프루닝 제약 조건 ---
 # 목표로 하는 연산량(MACs) 비율. 0.5는 원본 모델의 50% 연산량을 의미합니다.
-mac_constraint: 0.5
+mac_constraint: 0.4
 # beta_config_only: true로 설정하면 패치 프루닝(토큰 감소) 없이 헤드/뉴런 프루닝만 수행합니다.
 beta_config_only: true
 
