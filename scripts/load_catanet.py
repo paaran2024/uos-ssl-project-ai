@@ -3,10 +3,6 @@ import torch.nn as nn
 from models.catanet_arch import CATANet
 import os
 
-# 이 스크립트는 CATANet-L 모델을 로드하는 커스텀 로더 역할을 합니다.
-# OPTIN 프레임워크의 gen_vision_model.py를 직접 수정하는 대신,
-# ai 폴더 내에서 독립적으로 모델 로딩 로직을 관리합니다.
-
 def get_catanet_teacher_model(weights_path: str = None, upscale: int = 4):
     """
     CATANet-L 교사 모델을 생성하고 (선택적으로) 사전 훈련된 가중치를 로드합니다.

@@ -13,10 +13,10 @@ inspect_ranking.py: 가지치기(pruning) 중요도 점수 랭킹 파일을 검�
 
 실행 방법 (ai/ 디렉토리에서):
     # 헤드 랭킹 파일 검사 (예시)
-    python scripts/inspect_ranking.py --file ./storage/vision/DIV2K/CATANet-L/head_ranking_body.pkl
+    python analysis/inspect_ranking.py --file ./storage/vision/DIV2K/CATANet-L/head_ranking_body.pkl
 
     # 뉴런 랭킹 파일 검사 (예시)
-    python scripts/inspect_ranking.py --file ./storage/vision/DIV2K/CATANet-L/neuron_ranking_body.pkl
+    python analysis/inspect_ranking.py --file ./storage/vision/DIV2K/CATANet-L/neuron_ranking_body.pkl
 
 출력 내용:
     - 로드된 랭킹 파일의 경로

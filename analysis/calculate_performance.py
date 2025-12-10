@@ -48,14 +48,12 @@ def calculate_model_quality(model, dataloader, device):
 
 # --- 3. 메인 스크립트 ---
 def main():
-    # 스크립트의 기본 디렉토리를 ai/analysis로 설정하고, 모든 경로는 ai/ 디렉토리 기준으로 재설정합니다.
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Working directory is relative to: {base_dir}")
     print(f"Using device: {device}\n")
 
-    # --- 경로 설정 (ai/ 디렉토리 기준) ---
     original_model_path = os.path.join(base_dir, 'weights/CATANet-L_x2.pth')
     rebuilt_model_path = os.path.join(base_dir, 'weights/catanet_rebuilt.pth')
     masks_path = os.path.join(base_dir, 'weights/catanet_pruning_masks.pth')

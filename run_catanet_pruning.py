@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import argparse
 import yaml
 import torch
@@ -7,26 +6,17 @@ import os
 # --- 커스텀 모듈 및 OPTIN 라이브러리 임포트 ---
 from scripts.load_catanet import get_catanet_teacher_model
 from prune.main_prune import pruneModel
-from evals.gen_eval import evalModel, _apply_pruning_in_memory # MODIFIED: Import the correct pruning function
+from evals.gen_eval import evalModel, _apply_pruning_in_memory 
 from data.scripts.gen_dataset import generateDataset
 from utils.utility import calculateComplexity
 
 # 이 스크립트는 CATANet-L 모델에 대한 프루닝 전체 과정을 실행하는 메인 스크립트입니다.
 
 def apply_and_save_pruned_model(model, pruning_params, save_path):
-    """
-    MODIFIED: Applies all pruning masks (head and neuron) and saves the resulting pruned state_dict.
-    This now uses the same logic as the evaluation step to ensure consistency.
-    """
-    print(f"--- 프루닝된 모델 가중치 저장 시작 ---")
+    print(f"--- 프루닝된 모델 가중치 저장 시작 ---") # pkl 파일 생성
     print(f"저장 경로: {save_path}")
 
-    # Use the tested function from eval to get the correctly pruned state_dict
     pruned_state_dict = _apply_pruning_in_memory(model, pruning_params)
-
-    # Save the pruned state_dict.
-    # It's good practice to save it in a dictionary, similar to the original model checkpoints.
-    # The finetune script will look for the 'params' key.
     torch.save({'params': pruned_state_dict}, save_path)
     
     print(f"--- 프루닝된 모델 가중치 저장 완료 ---")
@@ -83,7 +73,6 @@ def main():
     print("--- 모델 프루닝 완료---")
 
     # --- 5. 프루닝된 모델 및 마스크 저장 ---
-    # MODIFIED: Save the pruning parameters (masks) as well
     pruned_model_save_path = os.path.join('weights', 'catanet_pruned.pth')
     pruning_masks_save_path = os.path.join('weights', 'catanet_pruning_masks.pth')
     

@@ -81,6 +81,7 @@ def Prune(args, prunedProps, lq_tensor, model, base_layer_wise_output, base_logi
             # 단일 뉴런 제거에 대한 모델의 민감도를 계산합니다.
             # `manifold_Distillation`은 중간 피처 맵을 비교합니다.
             # `KLDiv`는 최종 출력을 비교합니다. SR의 경우, 이는 출력 이미지를 비교합니다.
+            # 'KLDiv'가 본래 SR이 아니라 image classification용으로 설계되었어서 의도한 만큼 성능이 안나올 수 이씅
             if args.loss_type == "MMD" or args.loss_type == "MMD+KL":
                 for idx in range(len(base_layer_wise_output)):
                     if idx > layer or ((layer == prunedProps["num_layers"]-1) and layer == idx):
@@ -89,7 +90,6 @@ def Prune(args, prunedProps, lq_tensor, model, base_layer_wise_output, base_logi
                             MMDLayerResults += err
             
             if args.loss_type == "KL" or args.loss_type == "MMD+KL":    
-                # MODIFIED: Removed temp=args.temp as it's no longer used
                 KLErr = KLDiv(base_logit_output, current_logit_output)
             
             MMDResults = MMDLayerResults + KLErr
@@ -129,23 +129,19 @@ def pruneVisionNeurons(model, train_dataset, args, prunedProps):
         
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # MODIFIED: 단일 배치를 가져와 'lq' 텐서를 추출합니다
         print("분석을 위해 데이터 로더에서 배치를 가져오는 중...")
         batch = next(iter(train_dataset))
         lq_tensor = batch['lq'].to(device, non_blocking=True)
         
-        # MODIFIED: 이 함수에 전달된 `model`이 실제 네트워크이므로 직접 사용합니다.
         model.eval()
         
         print("가지치기 전 기준 출력 계산 중...")
         modelObject = CATANetModelHooking(args=args, model=model, disable_grad=True)
         
-        # MODIFIED: lq_tensor를 직접 전달합니다
         base_logit_output, base_layer_wise_output = modelObject.forwardPass(lq_tensor)
         modelObject.purge_hooks()
 
         print("뉴런 중요도 계산 시작...")
-        # MODIFIED: lq_tensor와 실제 네트워크를 전달합니다
         globalNeuronRanking, _ = Prune(args, prunedProps, lq_tensor, model, base_layer_wise_output, base_logit_output)
 
         exportglobalNeuronRanking = []

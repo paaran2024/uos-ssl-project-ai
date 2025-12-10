@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # --- 경로 설정 및 모듈 임포트 ---
-# 이 스크립트가 ai/analysis/ 폴더에 있으므로, 상위 폴더(ai)를 경로에 추가
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 try:
