@@ -1,6 +1,4 @@
 import torch
-# MODIFIED: Removed unused language_pruning import
-# from prune.language_pruning import pruneLanguageNeurons
 from prune.head_pruning import pruneHead
 from prune.vision_pruning import pruneVisionNeurons
 import numpy as np
@@ -121,7 +119,7 @@ def globalRankingVision(args, model, prunedProps, visionProps):
             
     # --- [핵심 수정] ---
     # 각 레이어에 최소 1개의 헤드와 뉴런이 유지되도록 강제합니다.
-    # 이를 통해 0개의 헤드/뉴런을 가진 유효하지 않은 아키텍처가 생성되는 것을 방지합니다.
+    # 이를 통해 0개의 헤드/뉴런을 가진 유효하지 않은 아키텍처가 생성되는 것을 방지합니다. 안 그럼 마스킹 된거 진짜 지울 때 에러남
     
     # 1. 헤드 강제 유지
     layer_head_sums = final_head_mask.sum(dim=1)
@@ -138,7 +136,7 @@ def globalRankingVision(args, model, prunedProps, visionProps):
                 print(f"[CONSTRAINT] Layer {i} has 0 heads. Forcing to keep the most important head: {most_important_head_for_layer}")
                 final_head_mask[i][most_important_head_for_layer] = 1
 
-    # 2. 뉴런 강제 유지 (일반적으로는 뉴런이 모두 제거되는 경우가 적지만, 안전장치로 추가)
+    # 2. 뉴런 강제 유지 (일반적으로는 뉴런이 모두 제거되는 경우가 지금까진 없었긴 한데 혹시 모르니까)
     layer_neuron_sums = final_neuron_mask.sum(dim=1)
     for i in range(prunedProps["num_layers"]):
         if layer_neuron_sums[i] == 0:

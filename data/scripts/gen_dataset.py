@@ -1,20 +1,7 @@
 """
-이 스크립트는 이미지 초해상도(Super-Resolution) 작업을 위한 PyTorch 데이터 로더(DataLoader)를 생성합니다.
-
-[설계 변경 이력]
-
-*   이전 버전 (OPTIN 프레임워크 출신):
-    -   원래 이미지 분류 (CIFAR, ImageNet) 및 언어 (GLUE) 작업을 위해 설계되었습니다.
-    -   각 데이터셋에 특화된 로더 스크립트(예: `cifar.py`, `imagenet.py`)를 호출하는 디스패처 역할을 했습니다.
-    -   초해상도에 필요한 쌍을 이루는 이미지 데이터셋과는 호환되지 않았습니다.
-
-*   현재 버전 (CATANet을 위해 수정됨):
-    -   이 스크립트는 이제 `basicsr` 라이브러리 (로컬 `ai/basicsr` 경로에 위치)를 데이터 로딩 백엔드로 활용합니다.
-    -   `basicsr`의 범용 `PairedImageDataset` 클래스를 사용합니다. 이 클래스는 설정 파일에 기반하여
-      어떤 쌍을 이루는 이미지 데이터셋(DIV2K, Set5 등)도 처리할 수 있습니다.
-    -   이 접근 방식은 데이터셋별 특정 스크립트(예: `div2k.py`)의 필요성을 없애줍니다.
-      모든 데이터셋별 정보(파일 경로 및 증강 옵션 등)는 이제 YAML 설정 파일(예: `config_catanet.yml`)에 정의됩니다.
+이 스크립트는 SR을 위한 PyTorch 데이터 로더(DataLoader)를 생성합니다.
 """
+
 import torch
 from os import path as osp
 from copy import deepcopy
@@ -52,7 +39,6 @@ def generateDataset(args):
         train_opt['phase'] = 'train'
         train_opt['scale'] = args.scale # 모델의 스케일 팩터 전달
         
-        # MODIFIED: CUDA 사용 가능 여부에 따라 pin_memory 및 prefetch_mode를 동적으로 설정
         if not torch.cuda.is_available():
             train_opt['pin_memory'] = False
             train_opt['prefetch_mode'] = 'cpu'
@@ -73,7 +59,6 @@ def generateDataset(args):
         val_opt['phase'] = 'val'
         val_opt['scale'] = args.scale # 모델의 스케일 팩터 전달
         
-        # MODIFIED: CUDA 사용 가능 여부에 따라 pin_memory 및 prefetch_mode를 동적으로 설정
         if not torch.cuda.is_available():
             val_opt['pin_memory'] = False
             val_opt['prefetch_mode'] = 'cpu'

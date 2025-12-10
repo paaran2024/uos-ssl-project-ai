@@ -1,7 +1,6 @@
 """
 [리팩토링 노트]
-이 스크립트는 OPTIN 프레임워크의 기존 `_hooks.py`를 대체하는 파일입니다.
-`CATANet` 아키텍처와 호환되도록 특별히 리팩토링되었습니다.
+이 스크립트는 OPTIN 프레임워크가 CATANet과 호환될 수 있도록 리팩토링한 코드입니다.
 
 [원본(HuggingFace/ViT 용)과의 주요 차이점]
 1.  모델 구조 탐색:
@@ -26,19 +25,14 @@ import torch
 from collections import OrderedDict
 
 class CATANetModelHooking:
-    """
-    `CATANet` 아키텍처를 위해 특별히 설계된 커스텀 모델 후킹 클래스입니다.
-    PyTorch hook을 사용하여 마스크를 적용하고 가지치기 분석을 위한
-    중간 레이어 출력을 캡처합니다.
-    """
-    def __init__(self, args, model=None, maskProps=None, disable_grad=False): # MODIFIED: disable_grad 추가
+    def __init__(self, args, model=None, maskProps=None, disable_grad=False): # disable_grad 추가 (Pruning할 때랑 Distillation할 때 다르게 걸어줘야 함)
         super(CATANetModelHooking, self).__init__()
         
         self.args = args
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = model.to(self.device)
         self.maskProps = maskProps
-        self.disable_grad = disable_grad # MODIFIED: disable_grad 저장
+        self.disable_grad = disable_grad 
         
         self.layer_outputs = []
         self.registered_hooks = []
@@ -125,7 +119,7 @@ class CATANetModelHooking:
         `disable_grad` 플래그에 따라 경사도 계산을 제어합니다.
         """
         self.layer_outputs = []
-        if self.disable_grad: # MODIFIED: disable_grad에 따라 조건부로 no_grad 적용
+        if self.disable_grad:
             with torch.no_grad():
                 output_image = self.model(input_tensor)
         else:

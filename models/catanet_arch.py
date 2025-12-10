@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 # 이 파일은 CATANet 모델의 아키텍처를 정의합니다.
-# 원본 소스: ai/references/CATANet-main/basicsr/archs/catanet_arch.py
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange
 from inspect import isfunction
-# BasicSR의 아키텍처 레지스트리를 사용하여 이 모델을 프레임워크에 등록합니다.
-# from basicsr.utils.registry import ARCH_REGISTRY
-# from basicsr.archs.arch_util import trunc_normal_
 import math
 
 # --- 유틸리티 함수들 ---

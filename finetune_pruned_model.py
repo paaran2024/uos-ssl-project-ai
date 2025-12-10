@@ -18,8 +18,8 @@ from utils.catanet_hooks import CATANetModelHooking
 finetune_pruned_model.py: 지식 증류(Knowledge Distillation)를 사용하여
                            가지치기된(pruned) 모델을 파인튜닝하는 스크립트입니다.
 
-이 스크립트는 이제 세 가지 증류 방식을 지원합니다:
-1.  Output Distillation: 교사 모델의 최종 출력을 학생 모델이 모방합니다. (기본)
+이 스크립트는 세 가지 증류 방식을 지원합니다:
+1.  Output Distillation: 교사 모델의 최종 출력을 학생 모델이 모방합니다.
 2.  Feature Distillation: 교사 모델의 중간 피처맵을 학생 모델이 직접 모방합니다.
 3.  FaKD: 교사 모델 피처맵의 구조적 관계(Affinity)를 학생 모델이 모방합니다.
 
@@ -74,7 +74,6 @@ def main():
     parser.add_argument("--epochs", type=int, default=10, help="파인튜닝 에폭 수")
     parser.add_argument("--lr", type=float, default=1e-4, help="학습률")
     parser.add_argument("--alpha", type=float, default=0.8, help="Output Distillation Loss 가중치")
-    # MODIFIED: 'fakd'를 선택지에 추가
     parser.add_argument("--distillation_type", type=str, default="output", choices=["output", "feature", "fakd"], help="증류 타입 선택")
     parser.add_argument("--beta", type=float, default=0.5, help="Feature/FaKD Distillation Loss 가중치")
     args = parser.parse_args()
